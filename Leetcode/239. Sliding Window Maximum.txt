@@ -1,0 +1,67 @@
+class Solution {
+    public int[] maxSlidingWindow(int[] arr, int k) {
+        int n = arr.length;
+        if(n==0){
+            return new int[0];
+        }
+        Deque<Integer> q = new LinkedList<>();
+        int res[] = new int[n-k+1];
+        int j = 0;
+        for(int i=0;i<k;i++){
+            while(!q.isEmpty() && arr[i]>arr[q.peekLast()])
+                q.removeLast();
+            q.addLast(i);
+        }
+        for(int i=k;i<n;i++){
+            res[j++] = arr[q.peekFirst()];
+            if(q.peekFirst() <= i - k)
+                q.removeFirst();
+            while(!q.isEmpty() && arr[i]>arr[q.peekLast()])
+                q.removeLast();
+            q.addLast(i);
+        }
+        res[j++] = arr[q.peekFirst()];
+        return res;
+    }
+}
+
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+            if (nums == null || nums.length == 0) {
+            return nums;
+        }
+
+        int start = 0;
+        int end = k-1;
+
+        int[] result = new int[nums.length - k + 1];
+        int max = Integer.MIN_VALUE;
+        int maxIndex = -1;
+
+        while (end < nums.length) {
+            if (start > maxIndex) {
+                maxIndex = -1;
+
+            }
+
+            if (maxIndex == -1) {
+                max = Integer.MIN_VALUE;
+                for (int i = start; i <= end; i++) {
+                    if (nums[i] > max) {
+                        max = nums[i];
+                        maxIndex = i;
+                    }
+                }
+            } else if (nums[end] > max) {
+                max = nums[end];
+                maxIndex = end;
+            }
+
+            result[start] = max;
+            start++;
+            end++;
+        }
+
+        return result;
+    }
+}

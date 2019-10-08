@@ -1,0 +1,50 @@
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        boolean[] f = new boolean[s.length() + 1];
+        
+        f[0] = true;
+        
+        for(int i=1; i <= s.length(); i++){
+            for(int j=0; j < i; j++){
+                if(f[j] && wordDict.contains(s.substring(j, i))){
+                    f[i] = true;
+                    break;
+                }
+            }
+        }
+        
+        return f[s.length()];
+    }
+}
+
+class Solution {
+    private int getMaxLength(List<String> wordDict) { //private method
+        int maxLength = 0;
+        for(String word : wordDict) {
+            maxLength = Math.max(maxLength, word.length());
+        }
+        return maxLength;
+    }
+    
+    public boolean wordBreak(String s, List<String> dict) {
+        if (s == null || s.length() == 0) // use == to check null, .equals(null) -> nullpointerexception
+            return true;
+        int maxLength = getMaxLength(dict);
+        boolean[] canSeg = new boolean[s.length() + 1];
+        canSeg[0] = true; //start, for judge in for loop
+        for(int i = 1; i <= s.length(); i++) {
+            //canSeg[i] = false; //precondition
+            for(int lastLen = 1; lastLen <= i && lastLen <= maxLength; lastLen++){
+                if(!canSeg[i - lastLen]){
+                    continue;
+                }
+                String word = s.substring(i - lastLen, i); //substring -  small "s"
+                if(dict.contains(word)){
+                    canSeg[i] = true;
+                    break;
+                }
+            }
+        }
+        return canSeg[s.length()];
+    }
+}

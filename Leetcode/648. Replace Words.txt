@@ -1,0 +1,45 @@
+class Solution {
+    class Node{
+        Node[] next;
+        boolean isWord;
+        Node(boolean isWord){
+            next = new Node[26];
+            this.isWord = isWord;
+        }
+    }
+    public String replaceWords(List<String> dict, String sentence) {
+        Node trie = new Node(false);
+        for(String word : dict){
+            insert(trie, word);
+        }
+        StringBuilder res = new StringBuilder();
+        for(String word : sentence.split(" ")){
+            res.append(getRoot(trie, word) + " ");
+        }
+         return res.substring(0, res.length()-1);
+    }
+    
+    public void insert(Node trie, String word){
+        Node ptr = trie;
+        for(char c : word.toCharArray()){
+            if(ptr.next[c - 'a']==null)
+                ptr.next[c - 'a'] = new Node(false);
+            ptr = ptr.next[c - 'a'];
+        }
+        ptr.isWord = true;
+    }
+    
+    public String getRoot(Node trie, String word){
+        Node ptr = trie;
+        StringBuilder root = new StringBuilder();
+        for(char c : word.toCharArray()){
+            root.append(c);
+            if(ptr.next[c - 'a']==null)
+                return word;
+            if(ptr.next[c - 'a'].isWord)
+                return root.toString();
+            ptr = ptr.next[c - 'a'];
+        }
+        return word;
+    }
+}

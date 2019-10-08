@@ -1,0 +1,48 @@
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        LinkedList<List<String>> res = new LinkedList<>();
+        String[] pattern = new String[n];
+        for (int i = 0; i < n; i++) {
+            StringBuilder str = new StringBuilder();
+            for (int j = 0; j < i; j++) str.append('.');
+            str.append('Q');
+            for (int j = i + 1; j < n; j++) str.append('.');
+            pattern[i] = str.toString();
+        }
+        solve(res, 0, new int[n], new int[n][n], pattern, n);
+        return res;
+    }
+    
+    public void solve(LinkedList<List<String>> res, int step, int[] index, int[][] freq, String[] pattern, int n) {
+        if (step == n) {
+            print(res, index, pattern);
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            if (freq[step][i] == 0) {
+                index[step] = i;
+                freq[step][i]++;
+                for (int j = step + 1; j < n; j++) {
+                    freq[j][i]++;
+                    if (i + j - step < n) freq[j][i + j - step]++;
+                    if (i - j + step >= 0) freq[j][i - j + step]++;                    
+                }
+                solve(res, step + 1, index, freq, pattern, n);
+                freq[step][i]--;
+                for (int j = step + 1; j < n; j++) {
+                    freq[j][i]--;
+                    if (i + j - step < n) freq[j][i + j - step]--;
+                    if (i - j + step >= 0) freq[j][i - j + step]--;                    
+                }                
+            }
+        }      
+    }
+    
+    public void print(LinkedList<List<String>> res, int[] index, String[] pattern) {
+        LinkedList<String> temp = new LinkedList<>();
+        for (int i = 0; i < index.length; i++) {
+            temp.add(pattern[index[i]]);
+        }
+        res.add(temp);
+    }
+}

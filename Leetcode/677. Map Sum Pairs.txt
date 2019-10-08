@@ -1,0 +1,52 @@
+class MapSum {
+    class Node{
+        Node[] next;
+        boolean isWord;
+        int val;
+        
+        Node(boolean isWord, int val){
+            next = new Node[26];
+            this.isWord = isWord;
+            this.val = val;
+        }
+    }
+    
+    Node trie;
+    
+    /** Initialize your data structure here. */
+    public MapSum() {
+        trie = new Node(false, 0);
+    }
+    
+    public void insert(String key, int val) {
+        Node ptr = trie;
+        for(char c : key.toCharArray()){
+            if(ptr.next[c-'a']==null)
+                ptr.next[c-'a'] = new Node(false, 0);
+            ptr = ptr.next[c-'a'];
+        }
+        ptr.isWord = true;
+        ptr.val = val;
+    }
+    
+    public int sum(String prefix) {
+        int res = 0;
+        Node ptr = trie;
+        for(char c : prefix.toCharArray()){
+            if(ptr.next[c-'a']==null)
+                return res;
+            ptr = ptr.next[c-'a'];
+        }
+        return dfs(ptr);
+    }
+    
+    private int dfs(Node trie) {
+        int sum = 0;
+        Node ptr = trie;
+        for (char c='a';c<='z';c++) {
+            if(ptr.next[c-'a']!=null)
+                sum += dfs(ptr.next[c-'a']);
+        }
+        return sum + trie.val;
+    }
+}

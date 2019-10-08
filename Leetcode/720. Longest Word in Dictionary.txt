@@ -1,0 +1,50 @@
+class Solution {
+    public String longestWord(String[] words) {
+        Arrays.sort(words);
+        Set<String> built = new HashSet<String>();
+        String res = "";
+        for (String w : words) {
+            if (w.length() == 1 || built.contains(w.substring(0, w.length() - 1))) {
+                res = w.length() > res.length() ? w : res;
+                built.add(w);
+            }
+        }
+        return res;
+    }
+}
+
+class Solution {
+    class Trie {
+        Trie[] next;
+        String word;
+        
+        public Trie() {
+            next = new Trie[26];
+            word = "";
+        }
+    }
+    
+    private void insert(String s, Trie root) {
+        for(char c: s.toCharArray()) {
+            if (root.next[c - 'a'] == null) root.next[c - 'a'] = new Trie();
+            root = root.next[c - 'a'];
+        }
+        root.word = s;
+    }
+    
+    private String res = "";
+    
+    private void dfs(Trie root) {
+        if (res.length() < root.word.length()) res = root.word;
+        for (Trie node : root.next) {
+            if (node != null && !node.word.isEmpty()) dfs(node);
+        }
+    }
+    
+    public String longestWord(String[] words) {
+        Trie root = new Trie();
+        for (String s : words) insert(s, root);
+        dfs(root);
+        return res;
+    }
+}

@@ -1,0 +1,33 @@
+class Solution {
+    public List<String> topKFrequent(String[] words, int k) {
+//         insert to map, then sort desc, then return first k 
+        List<String> [] buckets = new List[words.length + 1]; 
+        HashMap<String, Integer> map = new HashMap<>();
+        
+        for (String word : words) {
+            map.put(word, map.getOrDefault(word, 0) + 1); 
+        }
+        
+        List<String> res = new ArrayList<>(); 
+        
+        for (String i : map.keySet()) {
+            int freq = map.get(i);
+            if (buckets[freq] == null) {
+                buckets[freq] = new ArrayList<>();
+            }
+            buckets[freq].add(i);
+        }
+        
+        for (int i = words.length - 1; res.size() < k && i > 0; i--) {
+            if (buckets[i] != null){
+                Collections.sort(buckets[i]);
+                res.addAll(buckets[i]);
+                while (res.size() > k) {
+                    res.remove(res.size()-1); 
+                }
+            }
+        }
+        
+        return res; 
+    }
+}

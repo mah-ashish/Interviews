@@ -1,0 +1,41 @@
+class Solution {
+    public int[] numsSameConsecDiff(int N, int K) {
+        List<Integer> cur = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        for (int i = 2; i <= N; ++i) {
+            List<Integer> cur2 = new ArrayList<>();
+            for (int x : cur) {
+                int y = x % 10;
+                if (x > 0 && y + K < 10)
+                    cur2.add(x * 10 + y + K);
+                if (x > 0 && K > 0 && y - K >= 0)
+                    cur2.add(x * 10 + y - K);
+            }
+            cur = cur2;
+        }
+        return cur.stream().mapToInt(j->j).toArray();
+    }
+}
+
+class Solution {
+    public int[] numsSameConsecDiff(int N, int K) {
+        List<Integer> list = new ArrayList<>();
+        if(N == 1) list.add(0);
+        for(int i = 1; i <= 9; i++) 
+            dfs(N - 1, K, i, list);
+        int[] res = new int[list.size()];
+        for(int i = 0; i < list.size(); i++) 
+            res[i] = list.get(i);
+        return res;
+    }
+    private void dfs(int N, int k, int cur, List<Integer> list) {
+        if(N == 0) {
+            list.add(cur);
+            return;
+        }
+        int l = cur % 10;
+        if(l + k <= 9)
+            dfs(N - 1, k, cur * 10 + l + k, list);
+        if(l - k >= 0 && k != 0)
+            dfs(N - 1, k, cur * 10 + l -k, list);
+    }
+}

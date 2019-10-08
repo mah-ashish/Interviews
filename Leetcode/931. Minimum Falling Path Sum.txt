@@ -1,0 +1,55 @@
+class Solution {
+    public int minFallingPathSum(int[][] A) {
+        int N = A.length;
+        for (int r = N-2; r >= 0; --r) {
+            for (int c = 0; c < N; ++c) {
+                // best = min(A[r+1][c-1], A[r+1][c], A[r+1][c+1])
+                int best = A[r+1][c];
+                if (c > 0)
+                    best = Math.min(best, A[r+1][c-1]);
+                if (c+1 < N)
+                    best = Math.min(best, A[r+1][c+1]);
+                A[r][c] += best;
+            }
+        }
+
+        int ans = Integer.MAX_VALUE;
+        for (int x: A[0])
+            ans = Math.min(ans, x);
+        return ans;
+    }
+}
+
+class Solution {
+    boolean visited[][];
+    int n;int m;
+    public int minFallingPathSum(int[][] A) {
+        n = A.length;
+        m = A[0].length;
+        int[][]mem = new int[n][m];
+        visited = new boolean[n][m];
+        int ret = Integer.MAX_VALUE;
+        for(int i=0;i<m;i++){
+            ret=Math.min(dfs(A,0,i,mem),ret);
+        }
+        return ret;
+    }
+    int dfs(int[][]A,int row,int idex,int[][] mem){
+        if (visited[row][idex] == true){
+            return mem[row][idex];
+        }
+        if(row+1<n){
+            int mn = dfs(A,row+1,idex,mem);
+            if(idex-1>=0)
+                mn = Math.min(mn,dfs(A,row+1,idex-1,mem));
+            if(idex+1<m)
+                mn = Math.min(mn,dfs(A,row+1,idex+1,mem));
+            mem[row][idex]=A[row][idex]+mn;
+        }
+        else
+            mem[row][idex]=A[row][idex];
+        visited[row][idex]=true;
+        return mem[row][idex];
+        
+    }
+}

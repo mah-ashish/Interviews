@@ -1,0 +1,64 @@
+class Solution {
+    public int numUniqueEmails(String[] emails) {
+        if(emails==null)
+            return 0;
+        
+        HashSet<String> uniqueEmails = new HashSet<>();
+        
+        for(String email : emails){
+            StringBuilder newEmail = new StringBuilder();
+            
+            for(int j=0;j<email.length();j++){
+                
+                if(email.charAt(j)=='.')
+                    continue;
+                if(email.charAt(j)=='+')
+                {
+                    int index = email.indexOf('@');
+                    newEmail.append(email.substring(index));
+                    break;
+                }
+                newEmail.append(email.charAt(j));
+            }
+            uniqueEmails.add(newEmail.toString());
+        }
+        
+        return uniqueEmails.size();
+    }
+}
+
+class Solution {
+    public int numUniqueEmails(String[] emails) {
+        if(emails == null || emails.length == 0) {
+            return 0;
+        }
+        Set<String> ans = new HashSet<>();
+        for(String s: emails) {
+            ans.add(UniqueEmail(s));
+        }
+        return ans.size();
+    }
+    
+    private String UniqueEmail(String s) {
+        if(s == null || s.length() == 0) 
+            return "";
+        char[] str = s.toCharArray();
+        int i = 0, j = 0;
+        boolean reachDomain = false;
+        while(j < str.length) {
+            if(str[j] == '.' && reachDomain == false) {
+                j++;
+            } else if(str[j] == '+' && reachDomain == false) {
+                while(str[j] != '@' && j < str.length) {
+                    j++;
+                }
+            } else {
+                if(str[j] == '@') {
+                    reachDomain = true;
+                }
+                str[i++] = str[j++];
+            }
+        }
+        return new String(str, 0, i);
+    }
+}

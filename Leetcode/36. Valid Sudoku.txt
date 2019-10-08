@@ -1,0 +1,93 @@
+class Solution {
+    
+    public boolean checkBlock(char[][] board, int row, int col){
+        
+        HashSet<Character> unique = new HashSet<>();
+        
+        for(int i=row;i<row+3;i++){
+            for(int j=col;j<col+3;j++){
+                if(unique.contains(board[i][j]))
+                    return false;
+                if(board[i][j]!='.')
+                    unique.add(board[i][j]);
+            }
+        }
+        
+        return true;
+    }
+    
+    public boolean isValidSudoku(char[][] board) {
+        
+        HashSet<Character> unique = new HashSet<>();
+        
+        for(int i=0;i<9;i++){
+            
+            unique.clear();
+            
+            for(int j=0;j<9;j++){
+                if(unique.contains(board[i][j]))
+                    return false;
+                if(board[i][j]!='.')
+                    unique.add(board[i][j]);
+            }
+            
+            unique.clear();
+            
+            for(int j=0;j<9;j++){
+                if(unique.contains(board[j][i]))
+                    return false;
+                if(board[j][i]!='.')
+                    unique.add(board[j][i]);
+            }
+        }
+        
+        for(int i=0;i<9;i=i+3){
+            for(int j=0;j<9;j=j+3){
+                if(checkBlock(board,i,j)==false)
+                    return false;
+            }
+        }
+        
+        return true;
+    }
+}
+
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                char c = board[i][j];
+                if (board[i][j] != '.' && !isValid(c, i, j, board))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isValid(char c, int i, int j, char[][] board) {
+        for (int k = 0; k < board.length; k++) {
+            if (j != k && board[i][k] == c)
+                return false;
+            if (i != k && board[k][j] == c)
+                return false;
+        }
+        int x = getBox(i);
+        int y = getBox(j);
+        for (int k = x; k < x + 3; k++) {
+            for (int m = y; m < y + 3; m++) {
+                if (i != k && j != m && board[k][m] == c)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private int getBox(int i) {
+        if (i >= 0 && i < 3)
+            return 0;
+        else if (i >= 3 && i < 6)
+            return 3;
+        else
+            return 6;
+    }
+}

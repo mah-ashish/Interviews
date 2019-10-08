@@ -1,0 +1,81 @@
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        
+        int index = 0;
+        
+        //move positive elements to left
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]>0){
+                int temp = nums[index];
+                nums[index] = nums[i];
+                nums[i] = temp;
+                index++;
+            }
+        }
+        
+        if(index == 0)
+            return 1;
+        
+        
+        //for every +ve num less than nums.length, mark nums[num] negative 
+        for(int i=0;i<index;i++){
+            
+            if(Math.abs(nums[i])<=index){
+                
+                int j = Math.abs(nums[i]) - 1;
+                nums[j] = -Math.abs(nums[j]);
+            }
+        }
+        
+        //First positive num will give result
+        //If all are -ve, result is nums.length+1
+        for(int i=0;i<index;i++)
+            if(nums[i]>=0)
+                return i+1;
+        
+        return index+1;
+    }
+}
+
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        int one_count = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 1)
+                one_count++;
+        }
+        
+        if (one_count == 0)
+            return 1;
+        
+        if (nums.length == 1)
+            return 2;
+        
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] <= 0 || nums[i] > nums.length )
+                nums[i] = 1;
+        }
+        
+        int n = nums.length;
+        
+        for (int i = 0; i < n; i++) { 
+            int a = Math.abs(nums[i]);
+      
+            if (a == n)
+                nums[0] = - Math.abs(nums[0]);
+            else
+                nums[a] = - Math.abs(nums[a]);
+        }
+
+    
+        for (int i = 1; i < n; i++) {
+            if (nums[i] > 0)
+            return i;
+        }
+
+        if (nums[0] > 0)
+            return n;
+
+        return n + 1;
+    }
+}
